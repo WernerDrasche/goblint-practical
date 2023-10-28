@@ -248,7 +248,8 @@ let _ = Sys.set_signal Sys.sigsegv (Sys.Signal_handle handleSEGV);
 
 begin
   try
-    theMain ();
+    (* theMain (); *)
+    let _ = F.parse "test_asm.c" in ()
   with F.CabsOnly -> (* this is OK *) ()
 end;
 cleanup ();

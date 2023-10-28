@@ -234,7 +234,7 @@ and statement =
  | DEFINITION of definition (*definition or declaration of a variable or type*)
 
  | ASM of attribute list * (* typically only volatile and const *)
-          string list * (* template *)
+          string list list * (* template *)
           asm_details option * (* extra details to guide GCC's optimizer *)
           cabsloc
 

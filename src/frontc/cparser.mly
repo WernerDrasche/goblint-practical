@@ -244,6 +244,18 @@ let transformOffsetOf (speclist, dtype) member =
       queue;
     Buffer.contents buffer
 
+  (* todo: remove comments which is not that easy because dialect-dependent *)
+  let parse_asm template =
+      let lines = String.split_on_char '\n' template in
+      let tokens line = List.filter
+        (fun s -> s <> "")
+        (Str.split (Str.regexp "[ ,\t]") line) 
+      in
+      let instructions = List.filter
+        (fun l -> l <> [])
+        (List.map tokens lines) in
+      instructions
+
 %}
 
 %token <string * Cabs.cabsloc> IDENT
@@ -1647,9 +1659,20 @@ asmattr:
 |    CONST asmattr                      { ("const", []) :: $2 }
 |    INLINE asmattr                     { ("inline", []) :: $2 }
 ;
+/***
 asmtemplate:
     one_string_constant                          { [$1] }
 |   one_string_constant asmtemplate              { $1 :: $2 }
+; 
+***/
+asmtemplate:
+    asmtemplate_string                  { $1 }
+|   asmtemplate_string asmtemplate      { $1 @ $2 }
+;
+asmtemplate_string:
+    CST_STRING                          { let template = intlist_to_string (fst $1) in
+                                          let instructions = parse_asm template in
+                                          instructions }
 ;
 asmoutputs:
   /* empty */           { None }

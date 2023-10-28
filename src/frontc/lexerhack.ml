@@ -19,4 +19,4 @@ let pop_context: (unit -> unit) ref =
 
 (* Keep here the current pattern for formatparse *)
 let currentPattern = ref ""
-
+let insideAsmTemplate = ref false

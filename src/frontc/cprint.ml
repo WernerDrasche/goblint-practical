@@ -714,7 +714,10 @@ and print_statement stat =
         print "__asm__ ";
         print_attributes attrs;
         print "(";
-        print_list (fun () -> new_line()) print_string tlist; (* templates *)
+        print_list 
+          (fun () -> new_line())
+          (fun i -> String.concat " " i |> print_string)
+          tlist; (* templates *)
 	begin
 	  match details with
 	  | None -> ()

@@ -264,9 +264,17 @@ let parse_helper fname =
     if !doPrintProtos then (printPrototypes cabs);
     cabs, cil
 
+(*
 let parse fname =
   let cabs2cil = parse_helper fname in
   fun () -> snd (cabs2cil ())
+*)
+let parse fname =
+  let cabs2cil = parse_helper fname in
+  let cabs, cil = cabs2cil () in
+  Cprint.printComments := true;
+  Cprint.printFile stdout (fname, snd cabs);
+  fun () -> cil
 
 let parse_with_cabs fname = parse_helper fname
 

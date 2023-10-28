@@ -847,7 +847,7 @@ and instr =
                             information on interpreting Asm instructions *)
   | Asm        of attributes * (* Really only const and volatile can appear
                                  here *)
-                  string list *         (* templates (CR-separated) *)
+                  string list list *         (* templates (CR-separated) *)
                   (string option * string * lval) list *
                                           (* outputs must be lvals with
                                              optional names and constraints.
@@ -1353,7 +1353,7 @@ let mkBlock (slst: stmt list) : block =
 let mkEmptyStmt () = mkStmt (Instr [])
 let mkStmtOneInstr (i: instr) = mkStmt (Instr [i])
 
-let dummyInstr = (Asm([], ["dummy statement!!"], [], [], [], lu))
+let dummyInstr = (Asm([], [["dummy statement!!"]], [], [], [], lu))
 let dummyStmt =  mkStmt (Instr [dummyInstr])
 
 let compactStmts (b: stmt list) : stmt list =
@@ -3714,9 +3714,11 @@ class defaultCilPrinterClass : cilPrinter = object (self)
           ++ self#pAttrs () attrs
           ++ text " ("
           ++ (align
-                ++ (docList ~sep:line
+                (* todo *)
+                (* ++ (docList ~sep:line
                       (fun x -> text ("\"" ^ escape_string x ^ "\""))
-                      () tmpls)
+                      () tmpls) *)
+                ++ text "[instruction]"
                 ++
                 (if outs = [] && ins = [] && clobs = [] then
                   chr ':'
@@ -6006,7 +6008,7 @@ let dExp: doc -> exp =
   fun d -> Const(CStr(sprint ~width:!lineLength d, No_encoding))
 
 let dInstr: doc -> location -> instr =
-  fun d l -> Asm([], [sprint ~width:!lineLength d], [], [], [], l)
+  fun d l -> Asm([], [[sprint ~width:!lineLength d]], [], [], [], l)
 
 let dGlobal: doc -> location -> global =
   fun d l -> GAsm(sprint ~width:!lineLength d, l)

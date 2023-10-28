@@ -1038,7 +1038,7 @@ and instr =
 
   | Asm        of attributes * (* Really only const and volatile can appear
                                  here *)
-                  string list *         (* templates (CR-separated) *)
+                  string list list *         (* templates (CR-separated) *)
                   (string option * string * lval) list *
                                           (* outputs must be lvals with
                                              optional names and constraints.

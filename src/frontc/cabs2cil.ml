@@ -6918,12 +6918,12 @@ and doStatement (s : A.statement) : chunk =
 	let (tmpls', outs', ins', clobs') =
 	  match details with
 	  | None ->
-	      let tmpls' =
+	      (* let tmpls' =
 		      let pattern = Str.regexp "%" in
 		      let escape = Str.global_replace pattern "%%" in
 		      Util.list_map escape tmpls
-	      in
-	      (tmpls', [], [], [])
+	      in *)
+	      (tmpls, [], [], [])
 	  | Some { aoutputs = outs; ainputs = ins; aclobbers = clobs } ->
               let outs' =
 		Util.list_map
