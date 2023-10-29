@@ -6949,8 +6949,18 @@ and doStatement (s : A.statement) : chunk =
               in
 	      (tmpls, outs', ins', clobs)
 	in
-        !stmts @@
-        (i2c (Asm(attr', tmpls', outs', ins', clobs', loc')))
+        let info : asminfo = {
+          attr = attr';
+          ins = ins';
+          outs = outs';
+          clobs = clobs';
+          loc = loc';
+        } in
+        let instructions = Util.list_map 
+          (fun (opcode::operands) -> mkStmt (Asm { opcode; operands; info; }))
+          tmpls' 
+        in
+        !stmts @@ {empty with stmts = instructions}
 
   with e when continueOnError -> begin
     (ignore (E.log "Error in doStatement (%s)\n" (Printexc.to_string e)));

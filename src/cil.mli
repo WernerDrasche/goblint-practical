@@ -540,6 +540,14 @@ and varinfo = {
      *)
 }
 
+and asminfo = {
+  attr: attributes;
+  ins: (string option * string * exp) list;
+  outs: (string option * string * (lhost * offset)) list;
+  clobs: string list;
+  loc: location;
+}
+
 (** Storage-class information *)
 and storage =
     NoStorage     (** The default storage. Nothing is printed  *)
@@ -1007,6 +1015,12 @@ and stmtkind =
     (** Just a block of statements. Use it as a way to keep some block
        attributes local *)
 
+  | Asm of {
+      opcode: string;
+      operands: string list;
+      info: asminfo;
+    }
+
 (** {b Instructions}.
  An instruction {!instr} is a statement that has no local
 (intraprocedural) control flow. It can be either an assignment,
@@ -1035,7 +1049,7 @@ and instr =
       "__builtin_va_arg". In this case the second argument (which should be a
       type T) is encoded SizeOf(T).
       Second location is just for expression when inside condition. *)
-
+(* todo: delete
   | Asm        of attributes * (* Really only const and volatile can appear
                                  here *)
                   string list list *         (* templates (CR-separated) *)
@@ -1050,6 +1064,7 @@ and instr =
                                         (* inputs with optional names and constraints *)
                   string list *         (* register clobbers *)
                   location
+*)
     (** There are for storing inline assembly. They follow the GCC
         specification:
 {v
